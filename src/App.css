@@ -1,0 +1,130 @@
+/* home */
+.home-page-wrapper {
+    height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.form-wrapper {
+    width: 30%;
+    padding: 20px;
+    gap: 15px;
+    border-radius: 15px;
+    background-color: #1f1b22;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-wrapper .logo {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: row;
+}
+
+.logo img {
+    width: 67px;
+    height: 67px;
+}
+
+.logo .line {
+    width: 5px;
+    height: 58px;
+    border-radius: 2px;
+    background-color: white;
+    margin-left: 10px;
+}
+
+.logo .logo-name{
+    margin-left: 14px;
+}
+
+.logo .logo-name h1 {
+    font-size: 33px;
+}
+
+.logo .logo-name p {
+    font-size: 13px;
+    margin-left: 1px;
+    color: rgb(247, 156, 247);
+}
+
+.form-wrapper .main-label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-top: 17px;
+}
+
+.form-wrapper .input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.input-group .input-box {
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.664);
+    border-radius: 8px;
+    background-color: transparent;
+    font-size: 13px;
+}
+
+.input-group .input-box:focus {
+    outline: none;
+    color: white;
+    border: 1px solid rgb(247, 156, 247);
+}
+
+.btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: rgb(247, 156, 247);
+    color: black;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn:hover {
+    background-color: rgba(247, 156, 247, 0.721);
+}
+
+.form-wrapper .create-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 13px;
+    color: white;
+}
+
+.create-info a {
+    color: rgb(247, 156, 247);
+    text-decoration: none;
+}
+
+footer {
+    width: 100%;
+    position: absolute;
+    bottom: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+footer p {
+    font-size: 13px;
+    color: white;
+}
+
+footer p a {
+    color: rgb(247, 156, 247);
+    text-decoration: none;
+}
+
+/* editor */
