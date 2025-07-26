@@ -6,10 +6,10 @@ const Home = () => {
         <div className="form-wrapper">
           <div className="logo">
             <img src={logo} alt="code-hub-logo" />
-            <div className="line"></div>
+            {/* <div className="line"></div> */}
             <div className="logo-name">
               <h1>Code Hub</h1>
-              <p>Collaborative Code Editor</p>
+              {/* <p>Collaborative Code Editor</p> */}
             </div>
           </div>
           <h4 className="main-label">Paste invitation ROOM ID :</h4>
@@ -27,7 +27,8 @@ const Home = () => {
         </div>
         <footer>
           <p>
-            Created by <a href="https://github.com/soumitri-2005">Soumitri Mishra</a>
+            Created by{" "}
+            <a href="https://github.com/soumitri-2005">Soumitri Mishra</a>
           </p>
         </footer>
       </div>
