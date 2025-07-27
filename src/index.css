@@ -1,10 +1,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 :root {
   --font-style: "Montserrat", sans-serif;
-  --light-one: #f9f9f9;
-  --light-two: #dddfdf;
-  --dark-one: #292c2e;
-  --dark-two: #1a1d20;
+  --light-one: #efecec;
+  --light-two: #ffffff;
+  --dark-one: #252526;
+  --dark-two: #1e1e1e;
   --highlight-one: rgb(247, 156, 247);
   --highlight-two: #6c757d;
 }

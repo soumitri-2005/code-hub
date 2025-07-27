@@ -25,6 +25,19 @@ function App() {
                 secondary: "var(--light-one)",
               },
             },
+            error: {
+              style: {
+                padding: "8px",
+                color: "var(--dark-one)",
+                fontSize: "13px",
+                fontFamily: "var(--font-style)",
+                fontWeight: "600",
+              },
+              iconTheme: {
+                primary: "#f87171",
+                secondary: "var(--light-one)",
+              },
+            },
           }}
         ></Toaster>
       </div>
