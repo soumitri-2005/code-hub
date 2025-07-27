@@ -1,35 +1,59 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import logo from "/logo.png";
 import Client from "../components/Client";
 import Editor from "../components/Editor";
+import { initSocket } from "../socket";
+import ACTIONS from "../../Action";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
+import toast from "react-hot-toast";
 
 const EditorPage = () => {
-  const [clients, setClients] = useState([
-    {
-      socketId: 1,
-      username: "User1",
-    },
-    {
-      socketId: 2,
-      username: "User2",
-    },
-    {
-      socketId: 3, 
-      username: "User3",
-    },
-    {
-      socketId: 4,
-      username: "User4",
-    },
-    {
-      socketId: 5,
-      username: "User5",
-    },
-    {
-      socketId: 6,
-      username: "User6",
-    },
-  ]);
+  const socketRef = useRef(null);
+  const location = useLocation();
+  const reactNavigator = useNavigate();
+  const { roomId } = useParams();
+  const [clients, setClients] = useState([]);
+
+  useEffect(() => {
+    const init = async () => {
+      socketRef.current = await initSocket();
+      socketRef.current.on("connect_error", (err) => handelErrors(err));
+      socketRef.current.on("connect_failed", (err) => handelErrors(err));
+
+      function handelErrors(err) {
+        console.log("Socket connection failed due to", err);
+        toast.error("Socket connection failed, try again later.");
+        reactNavigator("/"); // Redirect to home page
+      }
+
+      socketRef.current.emit(ACTIONS.JOIN, {
+        roomId,
+        username: location.state?.username, // ? it is for to check if username is passed from previous page
+      });
+
+      // Listen for the 'joined' event to update clients
+      socketRef.current.on(
+        ACTIONS.JOINED,
+        ({ clients, username, socketId }) => {
+          if (username !== location.state?.username) {
+            toast.success(`${username} has joined the room.`);
+          }
+          // Update the client list
+          setClients(clients);
+        }
+      );
+    };
+    init();
+  }, []);
+
+  if (!location.state) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <>
