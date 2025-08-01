@@ -4,7 +4,12 @@ import Client from "../components/Client";
 import Editor from "../components/Editor";
 import { initSocket, disconnectSocket } from "../socket"; // <-- updated
 import ACTIONS from "../../Action";
-import { Navigate, useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  Navigate,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router-dom";
 import toast from "react-hot-toast";
 
 const EditorPage = () => {
@@ -36,6 +41,14 @@ const EditorPage = () => {
           toast.success(`${username} has joined the room.`);
         }
         setClients(clients);
+      });
+
+      // listening for disconnected
+      socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
+        toast.error(`${username} left the room.`);
+        setClients((prev) => {
+          return prev.filter((client) => client.socketId !== socketId);
+        });
       });
     };
 
@@ -74,7 +87,7 @@ const EditorPage = () => {
         </div>
       </div>
       <div className="editor-wrapper">
-        <Editor />
+        <Editor socketRef={socketRef} roomId={roomId}/>
       </div>
     </div>
   );
