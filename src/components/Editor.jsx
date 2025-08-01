@@ -2,12 +2,12 @@ import { useEffect, useRef } from "react";
 import Codemirror from "codemirror";
 import "codemirror/lib/codemirror.css";
 import "codemirror/mode/javascript/javascript";
-import "codemirror/theme/darcula.css";
+import "codemirror/theme/yonce.css";
 import "codemirror/addon/edit/closeBrackets";
 import "codemirror/addon/edit/closeTag";
 import ACTIONS from "../../Action";
 
-const Editor = ({ socketRef, roomId }) => {
+const Editor = ({ socketRef, roomId, onCodeChange }) => {
   const editorRef = useRef(null);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const Editor = ({ socketRef, roomId }) => {
         document.getElementById("realtime-editor"),
         {
           mode: { name: "javascript", json: true },
-          theme: "darcula",
+          theme: "yonce",
           autoCloseBrackets: true,
           autoCloseTags: true,
           lineNumbers: true,
@@ -28,6 +28,7 @@ const Editor = ({ socketRef, roomId }) => {
       editor.on("change", (instance, changes) => {
         const { origin } = changes;
         const code = editor.getValue();
+        onCodeChange(code);
         if (origin !== "setValue") {
           socketRef.current.emit(ACTIONS.CODE_CHANGE, { roomId, code });
         }

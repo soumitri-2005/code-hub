@@ -14,6 +14,7 @@ import toast from "react-hot-toast";
 
 const EditorPage = () => {
   const socketRef = useRef(null);
+  const codeRef = useRef(null);
   const location = useLocation();
   const reactNavigator = useNavigate();
   const { roomId } = useParams();
@@ -36,11 +37,16 @@ const EditorPage = () => {
         username: location.state?.username,
       });
 
-      socketRef.current.on(ACTIONS.JOINED, ({ clients, username }) => {
+      // listening for connected
+      socketRef.current.on(ACTIONS.JOINED, ({ clients, username, socketId }) => {
         if (username !== location.state?.username) {
           toast.success(`${username} has joined the room.`);
         }
         setClients(clients);
+        socketRef.current.emit(ACTIONS.SYNC_CODE, {
+          code: codeRef.current,
+          socketId,
+        });
       });
 
       // listening for disconnected
@@ -59,6 +65,20 @@ const EditorPage = () => {
       disconnectSocket();
     };
   }, []);
+
+  async function copyRoomId() {
+    try {
+      await navigator.clipboard.writeText(roomId);
+      toast.success("Room ID has been copied to your clipboard.");
+    } catch (error) {
+      toast.error("Could not copy the room ID.");
+      console.log(error);
+    }
+  }
+
+  function leaveRoom() {
+    reactNavigator("/");
+  }
 
   if (!location.state) {
     return <Navigate to="/" />;
@@ -82,12 +102,16 @@ const EditorPage = () => {
           </div>
         </div>
         <div className="aside-down">
-          <button className="btn copy-btn">Copy ROOM ID</button>
-          <button className="btn leave-btn">Leave Room</button>
+          <button className="btn copy-btn" onClick={copyRoomId}>
+            Copy ROOM ID
+          </button>
+          <button className="btn leave-btn" onClick={leaveRoom}>
+            Leave Room
+          </button>
         </div>
       </div>
       <div className="editor-wrapper">
-        <Editor socketRef={socketRef} roomId={roomId}/>
+        <Editor socketRef={socketRef} roomId={roomId} onCodeChange={(code) => {codeRef.current = code}}/>
       </div>
     </div>
   );
