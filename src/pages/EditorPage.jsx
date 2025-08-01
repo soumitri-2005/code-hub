@@ -38,16 +38,19 @@ const EditorPage = () => {
       });
 
       // listening for connected
-      socketRef.current.on(ACTIONS.JOINED, ({ clients, username, socketId }) => {
-        if (username !== location.state?.username) {
-          toast.success(`${username} has joined the room.`);
+      socketRef.current.on(
+        ACTIONS.JOINED,
+        ({ clients, username, socketId }) => {
+          if (username !== location.state?.username) {
+            toast.success(`${username} has joined the room.`);
+          }
+          setClients(clients);
+          socketRef.current.emit(ACTIONS.SYNC_CODE, {
+            code: codeRef.current,
+            socketId,
+          });
         }
-        setClients(clients);
-        socketRef.current.emit(ACTIONS.SYNC_CODE, {
-          code: codeRef.current,
-          socketId,
-        });
-      });
+      );
 
       // listening for disconnected
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
@@ -80,6 +83,10 @@ const EditorPage = () => {
     reactNavigator("/");
   }
 
+  function homePage() {
+    reactNavigator("/");
+  }
+
   if (!location.state) {
     return <Navigate to="/" />;
   }
@@ -88,7 +95,7 @@ const EditorPage = () => {
     <div className="main-wrapper">
       <div className="aside">
         <div className="aside-up">
-          <div className="logo logo-wrapper">
+          <div className="logo logo-wrapper" onClick={homePage}>
             <img src={logo} alt="code-hub-logo" />
             <div className="logo-name">
               <h1>Code Hub</h1>
@@ -111,7 +118,13 @@ const EditorPage = () => {
         </div>
       </div>
       <div className="editor-wrapper">
-        <Editor socketRef={socketRef} roomId={roomId} onCodeChange={(code) => {codeRef.current = code}}/>
+        <Editor
+          socketRef={socketRef}
+          roomId={roomId}
+          onCodeChange={(code) => {
+            codeRef.current = code;
+          }}
+        />
       </div>
     </div>
   );
