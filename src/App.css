@@ -10,7 +10,7 @@
 }
 
 .form-wrapper {
-  width: 28%;
+  width: 420px;
   padding: 20px;
   gap: 15px;
   border-radius: 15px;
@@ -158,7 +158,7 @@ footer p a:hover {
 }
 
 .aside {
-  width: 19%;
+  width: 270px;
   height: 100vh;
   background-color: var(--dark-one);
   padding: 10px;
@@ -238,7 +238,7 @@ footer p a:hover {
 }
 
 .editor-wrapper {
-  width: 81%;
+  width: calc(100% - 270px);
   height: 100vh;
   background-color: var(--dark-two);
   padding: 10px;
