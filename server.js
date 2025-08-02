@@ -23,13 +23,6 @@ function getAllConnectedClients(roomId) {
   );
 }
 
-app.use(express.static(path.join(__dirname, "dist")));
-
-// Catch-all for SPA routes
-app.get(/.*/, (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
-
 // Socket events
 io.on("connection", (socket) => {
   socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
