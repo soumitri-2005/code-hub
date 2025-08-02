@@ -1,3 +1,4 @@
+// server.js
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
@@ -12,41 +13,36 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static("dist"));
-app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
-
 const userSocketMap = {};
-// exp
-// {
-//     'sfsdfsfdsfdsfasasdf': 'username1',
-// }
 
 function getAllConnectedClients(roomId) {
   return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
     (socketId) => {
-      return {
-        socketId,
-        username: userSocketMap[socketId],
-      };
+      return { socketId, username: userSocketMap[socketId] };
     }
   );
 }
 
+app.use(express.static(path.join(__dirname, "dist")));
+
+// Catch-all for SPA routes
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
+
+// Socket events
 io.on("connection", (socket) => {
-  // console.log("socket connected", socket.id);
   socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
     userSocketMap[socket.id] = username;
     socket.join(roomId);
     const clients = getAllConnectedClients(roomId);
-    clients.forEach(({ socketId }) => {
+    clients.forEach(({ socketId }) =>
       io.to(socketId).emit(ACTIONS.JOINED, {
         clients,
         username,
         socketId: socket.id,
-      });
-    });
+      })
+    );
   });
 
   socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
@@ -65,8 +61,7 @@ io.on("connection", (socket) => {
         username: userSocketMap[socket.id],
       });
     });
-    userSocketMap[socket.id];
-    socket.leave();
+    delete userSocketMap[socket.id];
   });
 });
 
