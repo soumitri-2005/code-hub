@@ -1,12 +1,41 @@
-# React + Vite
+# 💻 Code Hub — Real-time Collaborative Code Editor
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Code Hub** is a real-time collaborative coding platform that allows multiple users to write, edit, and run code together — anytime, anywhere.  
+Built with modern web technologies, it’s perfect for pair programming, coding interviews, online classes, and hackathons.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🔗 Demo
 
-## Expanding the ESLint configuration
+<img width="1919" height="1077" alt="Screenshot 2025-08-10 115506" src="https://github.com/user-attachments/assets/7bb2f4e1-4cd2-4091-bf94-202eeaa8a32d" />
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+<img width="1919" height="1079" alt="Screenshot 2025-08-10 115602" src="https://github.com/user-attachments/assets/45a105a3-da9e-4d75-86be-ffa2050582bd" />
+
+---
+
+## ✨ Features
+
+- 📝 **Real-time Collaboration** — Multiple users can edit code simultaneously.
+- 🌐 **Multi-language Support** — Write and run code in various programming languages.
+- 💬 **Built-in Chat** — Communicate with collaborators without leaving the editor.
+- 🖥 **Syntax Highlighting** — Clean, readable code with editor themes.
+- 🚀 **Instant Code Execution** — Run code and see results instantly.
+- 📂 **Session Sharing** — Share a unique link to collaborate instantly.
+- 📱 **Responsive UI** — Works smoothly across devices.
+
+---
+
+## 🛠 Tech Stack
+
+**Frontend**
+- React.js / Vite
+- Tailwind CSS
+- Monaco Editor (VS Code-like editor)
+
+**Backend**
+- Node.js & Express.js
+- WebSocket / Socket.IO (real-time communication)
+- Code execution API (e.g., Judge0 or custom sandbox)
+
+**Other**
+- MongoDB (Session storage, if applicable)
