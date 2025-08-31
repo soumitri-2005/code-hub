@@ -1,45 +1,37 @@
-import { useEffect } from "react";
-import { Controlled as ControlledEditor } from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
+import React, { useEffect, useRef } from "react";
 import { EditorView } from "@codemirror/view";
-import ACTIONS from "../../Action";
+import { javascript } from "@codemirror/lang-javascript";
+import { EditorState } from "@codemirror/state";
+import { basicSetup } from "codemirror";
+import { dracula } from "@uiw/codemirror-theme-dracula";
 
-const Editor = ({ socketRef, roomId, onCodeChange }) => {
-  const handleChange = (value) => {
-    onCodeChange(value);
-    if (socketRef.current) {
-      socketRef.current.emit(ACTIONS.CODE_CHANGE, { roomId, code: value });
-    }
-  };
+export default function Editor({ value, onChange }) {
+  const editorRef = useRef(null);
 
   useEffect(() => {
-    if (socketRef.current) {
-      socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
-        if (code !== null) {
-          onCodeChange(code);
-        }
-      });
-    }
+    if (editorRef.current) return;
 
-    return () => {
-      socketRef.current?.off(ACTIONS.CODE_CHANGE);
-    };
-  }, [socketRef.current]);
+    const startState = EditorState.create({
+      doc: value || "",
+      extensions: [
+        basicSetup,
+        javascript(),
+        dracula, // ✅ THEME GOES HERE
+        EditorView.updateListener.of((update) => {
+          if (update.docChanged) {
+            onChange(update.state.doc.toString());
+          }
+        }),
+      ],
+    });
 
-  return (
-    <ControlledEditor
-      value=""
-      height="100vh"
-      extensions={[javascript()]}
-      theme="dark"
-      onChange={(value) => handleChange(value)}
-      basicSetup={{
-        lineNumbers: true,
-        autocompletion: true,
-        closeBrackets: true,
-      }}
-    />
-  );
-};
+    const view = new EditorView({
+      state: startState,
+      parent: document.getElementById("editor"),
+    });
 
-export default Editor;
+    editorRef.current = view;
+  }, []);
+
+  return <div id="editor" className="h-scrern w-full" />;
+}

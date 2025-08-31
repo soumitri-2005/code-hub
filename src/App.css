@@ -240,7 +240,7 @@ footer p a:hover {
 .editor-wrapper {
   width: calc(100% - 270px);
   height: 100vh;
-  background-color: var(--dark-two);
+  background-color: #282C34;
   padding: 10px;
   display: flex;
   flex-direction: column;
