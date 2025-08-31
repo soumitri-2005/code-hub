@@ -39,5 +39,5 @@ Website Link: https://code-hub-gs77.onrender.com
 - WebSocket / Socket.IO (real-time communication)
 - Code execution API (e.g., Judge0 or custom sandbox)
 
-**Other**
-- MongoDB (Session storage, if applicable)
+**Hosted**
+- Render
