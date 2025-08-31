@@ -4,9 +4,10 @@ let socket = null;
 
 export const initSocket = async () => {
   if (!socket) {
-    // Use environment variable if set, otherwise fallback to same origin (for production) or localhost
     const URL =
-      import.meta.env.VITE_BACKEND_URL || window.location.origin || "http://localhost:5000";
+      import.meta.env.VITE_BACKEND_URL ||
+      window.location.origin ||
+      "http://localhost:5000";
 
     socket = io(URL, {
       "force new connection": true,

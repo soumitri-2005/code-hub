@@ -29,7 +29,8 @@ const Home = () => {
   };
 
   const handleInputEnter = (e) => {
-    if (e.code === "Enter") { // the "onKeyUp" event will trigger when the user presses the Enter key not any other keys
+    if (e.code === "Enter") {
+      // the "onKeyUp" event will trigger when the user presses the Enter key not any other keys
       joinRoom();
     }
   };

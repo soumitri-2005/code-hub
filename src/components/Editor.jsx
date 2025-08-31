@@ -4,7 +4,6 @@ import { javascript } from "@codemirror/lang-javascript";
 import ACTIONS from "../../Action";
 
 const Editor = ({ socketRef, roomId, value, onCodeChange }) => {
-  // Local typing + emit
   const handleChange = (val) => {
     onCodeChange(val);
     if (socketRef.current) {
@@ -12,7 +11,6 @@ const Editor = ({ socketRef, roomId, value, onCodeChange }) => {
     }
   };
 
-  // Listen for remote changes
   useEffect(() => {
     if (!socketRef.current) return;
 

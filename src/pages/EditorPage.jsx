@@ -96,7 +96,7 @@ const EditorPage = () => {
             onClick={async () => {
               try {
                 await navigator.clipboard.writeText(roomId);
-                toast.success("Room ID copied to clipboard!"); // ✅ toast here
+                toast.success("Room ID copied to clipboard!");
               } catch (err) {
                 toast.error("Failed to copy Room ID.");
                 console.log(err);

@@ -11,7 +11,6 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const server = http.createServer(app);
 
-// Use "*" for CORS since frontend + backend are on same Render URL
 const io = new Server(server, {
   cors: {
     origin: "*",
@@ -19,7 +18,6 @@ const io = new Server(server, {
   },
 });
 
-// Serve frontend build
 app.use(express.static(path.join(__dirname, "dist")));
 app.use((req, res) => res.sendFile(path.join(__dirname, "dist", "index.html")));
 
@@ -31,7 +29,6 @@ function getAllConnectedClients(roomId) {
   );
 }
 
-// Socket events
 io.on("connection", (socket) => {
   socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
     userSocketMap[socket.id] = username;

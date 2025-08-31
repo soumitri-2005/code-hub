@@ -59,7 +59,10 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home socket={socket} />} />
-          <Route path="/editor/:roomId" element={<EditorPage socket={socket} />} />
+          <Route
+            path="/editor/:roomId"
+            element={<EditorPage socket={socket} />}
+          />
         </Routes>
       </BrowserRouter>
     </>
