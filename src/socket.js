@@ -1,33 +1,39 @@
-// socket.js
-import { io } from "socket.io-client";
+import { useEffect } from "react";
+import CodeMirror from "@uiw/react-codemirror";
+import { javascript } from "@codemirror/lang-javascript";
+import ACTIONS from "../../Action";
 
-let socket = null;
+const Editor = ({ socketRef, roomId, onCodeChange, value = "" }) => {
+  const handleChange = (val) => {
+    onCodeChange(val);
+    if (socketRef.current) {
+      socketRef.current.emit(ACTIONS.CODE_CHANGE, { roomId, code: val });
+    }
+  };
 
-export const initSocket = async () => {
-  if (!socket) {
-    const URL = import.meta.env.VITE_BACKEND_URL;
-    if (!URL) {
-      console.error("❌ VITE_BACKEND_URL is not defined");
-      return null;
+  useEffect(() => {
+    if (socketRef.current) {
+      socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+        if (code !== null) {
+          onCodeChange(code);
+        }
+      });
     }
 
-    socket = io(URL, {
-      forceNew: true,
-      reconnectionAttempts: Infinity, // Keep trying to reconnect
-      timeout: 10000,
-      transports: ["websocket"],
-    });
+    return () => {
+      socketRef.current?.off(ACTIONS.CODE_CHANGE);
+    };
+  }, [socketRef]);
 
-    socket.on("connect_error", (err) => {
-      console.error("❌ Socket connection error:", err.message);
-    });
-  }
-  return socket;
+  return (
+    <CodeMirror
+      value={value}
+      height="100vh"
+      theme="dark"
+      extensions={[javascript()]}
+      onChange={(val) => handleChange(val)}
+    />
+  );
 };
 
-export const disconnectSocket = () => {
-  if (socket) {
-    socket.disconnect();
-    socket = null;
-  }
-};
+export default Editor;
