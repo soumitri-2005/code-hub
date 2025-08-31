@@ -11,7 +11,12 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+  cors: {
+    origin: "http://localhost:5173",  // Vite default
+    methods: ["GET", "POST"],
+  },
+});
 
 app.use(express.static(path.join(__dirname, "dist"))); 
 

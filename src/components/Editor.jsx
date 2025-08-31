@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { EditorView } from "@codemirror/view";
 import { javascript } from "@codemirror/lang-javascript";
 import { EditorState } from "@codemirror/state";
-import { basicSetup } from "codemirror";
+import { basicSetup } from "@codemirror/basic-setup";  // ✅ correct import
 import { dracula } from "@uiw/codemirror-theme-dracula";
 
 export default function Editor({ value, onChange }) {
@@ -16,7 +16,7 @@ export default function Editor({ value, onChange }) {
       extensions: [
         basicSetup,
         javascript(),
-        dracula, // ✅ THEME GOES HERE
+        dracula,
         EditorView.updateListener.of((update) => {
           if (update.docChanged) {
             onChange(update.state.doc.toString());
@@ -33,5 +33,5 @@ export default function Editor({ value, onChange }) {
     editorRef.current = view;
   }, []);
 
-  return <div id="editor" className="h-scrern w-full" />;
+  return <div id="editor" className="h-screen w-full" />; // ✅ fixed typo: h-scrern → h-screen
 }
