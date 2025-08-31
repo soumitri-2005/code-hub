@@ -9,7 +9,7 @@ Built with modern web technologies, it’s perfect for pair programming, coding 
 
 <img width="1919" height="1077" alt="Screenshot 2025-08-10 115506" src="https://github.com/user-attachments/assets/7bb2f4e1-4cd2-4091-bf94-202eeaa8a32d" />
 
-<img width="1919" height="1079" alt="Screenshot 2025-08-10 115602" src="https://github.com/user-attachments/assets/45a105a3-da9e-4d75-86be-ffa2050582bd" />
+<img width="1919" height="1079" alt="Screenshot 2025-08-31 142438" src="https://github.com/user-attachments/assets/1572cd90-dc48-44e2-8bec-1a1d474cbb65" />
 
 ---
 
