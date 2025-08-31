@@ -1,4 +1,3 @@
-// server.js
 import express from "express";
 import http from "http";
 import { Server } from "socket.io";
@@ -11,26 +10,24 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 const server = http.createServer(app);
+
+// Use "*" for CORS since frontend + backend are on same Render URL
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:5173",  // Vite default
+    origin: "*",
     methods: ["GET", "POST"],
   },
 });
 
-app.use(express.static(path.join(__dirname, "dist"))); 
-
-app.use((req, res, next) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
-})
+// Serve frontend build
+app.use(express.static(path.join(__dirname, "dist")));
+app.use((req, res) => res.sendFile(path.join(__dirname, "dist", "index.html")));
 
 const userSocketMap = {};
 
 function getAllConnectedClients(roomId) {
   return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
-    (socketId) => {
-      return { socketId, username: userSocketMap[socketId] };
-    }
+    (socketId) => ({ socketId, username: userSocketMap[socketId] })
   );
 }
 
@@ -39,6 +36,7 @@ io.on("connection", (socket) => {
   socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
     userSocketMap[socket.id] = username;
     socket.join(roomId);
+
     const clients = getAllConnectedClients(roomId);
     clients.forEach(({ socketId }) =>
       io.to(socketId).emit(ACTIONS.JOINED, {
