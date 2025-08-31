@@ -188,6 +188,14 @@ footer p a:hover {
   font-family: var(--font-style);
 }
 
+.aside .aside-up h1 {
+  font-size: 38px;
+  color: var(--light-two);
+  font-weight: 600;
+  font-family: var(--font-style);
+  margin-left: 5px;
+}
+
 .aside-down {
   display: flex;
   flex-direction: column;
@@ -240,14 +248,9 @@ footer p a:hover {
 .editor-wrapper {
   width: calc(100% - 270px);
   height: 100vh;
-  background-color: #282C34;
+  background-color: var(--dark-two);
   padding: 10px;
   display: flex;
   flex-direction: column;
-}
-
-.CodeMirror {
-  min-height: calc(100vh - 20px);
-  font-size: 14px;
-  line-height: 1.5;
+  font-size: 15px;
 }

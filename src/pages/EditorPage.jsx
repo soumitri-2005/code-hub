@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import logo from "/logo.png";
 import Client from "../components/Client";
 import Editor from "../components/Editor";
-import { initSocket, disconnectSocket } from "../socket"; // <-- updated
+import { initSocket, disconnectSocket } from "../socket";
 import ACTIONS from "../../Action";
 import {
   Navigate,
@@ -14,105 +14,99 @@ import toast from "react-hot-toast";
 
 const EditorPage = () => {
   const socketRef = useRef(null);
-  const codeRef = useRef(null);
-  const location = useLocation();
-  const reactNavigator = useNavigate();
   const { roomId } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const [clients, setClients] = useState([]);
+  const [code, setCode] = useState(""); // editor content
 
   useEffect(() => {
+    if (!location.state) return;
+
     const init = async () => {
       socketRef.current = await initSocket();
-      socketRef.current.on("connect_error", handelErrors);
-      socketRef.current.on("connect_failed", handelErrors);
 
-      function handelErrors(err) {
+      socketRef.current.on("connect_error", handleErrors);
+      socketRef.current.on("connect_failed", handleErrors);
+
+      function handleErrors(err) {
         console.log("Socket connection failed due to", err);
         toast.error("Socket connection failed, try again later.");
-        reactNavigator("/");
+        navigate("/");
       }
 
+      // Join room
       socketRef.current.emit(ACTIONS.JOIN, {
         roomId,
-        username: location.state?.username,
+        username: location.state.username,
       });
 
-      // listening for connected
-      socketRef.current.on(
-        ACTIONS.JOINED,
-        ({ clients, username, socketId }) => {
-          if (username !== location.state?.username) {
-            toast.success(`${username} has joined the room.`);
-          }
-          setClients(clients);
-          socketRef.current.emit(ACTIONS.SYNC_CODE, {
-            code: codeRef.current,
-            socketId,
-          });
+      // Someone joins
+      socketRef.current.on(ACTIONS.JOINED, ({ clients, username }) => {
+        setClients(clients);
+        if (username !== location.state.username) {
+          toast.success(`${username} joined the room.`);
         }
-      );
+      });
 
-      // listening for disconnected
+      // Someone leaves
       socketRef.current.on(ACTIONS.DISCONNECTED, ({ socketId, username }) => {
+        setClients((prev) => prev.filter((c) => c.socketId !== socketId));
         toast.error(`${username} left the room.`);
-        setClients((prev) => {
-          return prev.filter((client) => client.socketId !== socketId);
-        });
+      });
+
+      // Receive initial code or updates
+      socketRef.current.on(ACTIONS.SYNC_CODE, ({ code: serverCode }) => {
+        setCode((prev) => (prev === "" ? serverCode : prev)); // only if empty
+      });
+
+      socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code: newCode }) => {
+        setCode(newCode);
       });
     };
 
     init();
 
-    // Cleanup when component unmounts
     return () => {
       disconnectSocket();
     };
-  }, []);
+  }, [location.state, navigate, roomId]);
 
-  async function copyRoomId() {
-    try {
-      await navigator.clipboard.writeText(roomId);
-      toast.success("Room ID has been copied to your clipboard.");
-    } catch (error) {
-      toast.error("Could not copy the room ID.");
-      console.log(error);
-    }
-  }
-
-  function leaveRoom() {
-    reactNavigator("/");
-  }
-
-  function homePage() {
-    reactNavigator("/");
-  }
-
-  if (!location.state) {
-    return <Navigate to="/" />;
-  }
+  if (!location.state) return <Navigate to="/" />;
 
   return (
     <div className="main-wrapper">
       <div className="aside">
         <div className="aside-up">
-          <div className="logo logo-wrapper" onClick={homePage}>
-            <img src={logo} alt="code-hub-logo" />
-            <div className="logo-name">
-              <h1>Code Hub</h1>
-            </div>
+          <div className="logo logo-wrapper" onClick={() => navigate("/")}>
+            <img src={logo} alt="logo" />
+            <h1>CodeHub</h1>
           </div>
           <h3>Connected Users</h3>
           <div className="client-list">
-            {clients.map((client) => (
-              <Client key={client.socketId} username={client.username} />
+            {clients.map((c) => (
+              <Client key={c.socketId} username={c.username} />
             ))}
           </div>
         </div>
         <div className="aside-down">
-          <button className="btn copy-btn" onClick={copyRoomId}>
+          <button
+            className="btn copy-btn"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(roomId);
+                toast.success("Room ID copied to clipboard!"); // ✅ toast here
+              } catch (err) {
+                toast.error("Failed to copy Room ID.");
+                console.log(err);
+              }
+            }}
+          >
             Copy ROOM ID
           </button>
-          <button className="btn leave-btn" onClick={leaveRoom}>
+
+          <button className="btn leave-btn" onClick={() => navigate("/")}>
             Leave Room
           </button>
         </div>
@@ -121,9 +115,8 @@ const EditorPage = () => {
         <Editor
           socketRef={socketRef}
           roomId={roomId}
-          onCodeChange={(code) => {
-            codeRef.current = code;
-          }}
+          value={code}
+          onCodeChange={setCode}
         />
       </div>
     </div>

@@ -41,7 +41,7 @@ const Home = () => {
           <div className="logo">
             <img src={logo} alt="code-hub-logo" />
             <div className="logo-name">
-              <h1>Code Hub</h1>
+              <h1>CodeHub</h1>
             </div>
           </div>
           <h4 className="main-label">Paste invitation ROOM ID :</h4>
