@@ -1,39 +1,24 @@
-import { useEffect } from "react";
-import CodeMirror from "@uiw/react-codemirror";
-import { javascript } from "@codemirror/lang-javascript";
-import ACTIONS from "../../Action";
+// socket.js
+import { io } from "socket.io-client";
 
-const Editor = ({ socketRef, roomId, onCodeChange, value = "" }) => {
-  const handleChange = (val) => {
-    onCodeChange(val);
-    if (socketRef.current) {
-      socketRef.current.emit(ACTIONS.CODE_CHANGE, { roomId, code: val });
-    }
-  };
+let socket = null;
 
-  useEffect(() => {
-    if (socketRef.current) {
-      socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
-        if (code !== null) {
-          onCodeChange(code);
-        }
-      });
-    }
-
-    return () => {
-      socketRef.current?.off(ACTIONS.CODE_CHANGE);
-    };
-  }, [socketRef]);
-
-  return (
-    <CodeMirror
-      value={value}
-      height="100vh"
-      theme="dark"
-      extensions={[javascript()]}
-      onChange={(val) => handleChange(val)}
-    />
-  );
+export const initSocket = async () => {
+  if (!socket) {
+    const URL = import.meta.env.VITE_BACKEND_URL;
+    socket = io(URL, {
+      "force new connection": true,
+      reconnectionAttempts: "Infinity",
+      timeout: 10000,
+      transports: ["websocket"],
+    });
+  }
+  return socket;
 };
 
-export default Editor;
+export const disconnectSocket = () => {
+  if (socket) {
+    socket.disconnect();
+    socket = null;
+  }
+};

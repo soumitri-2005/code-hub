@@ -1,37 +1,39 @@
-import React, { useEffect, useRef } from "react";
-import { EditorView } from "@codemirror/view";
+import { useEffect } from "react";
+import CodeMirror from "@uiw/react-codemirror";
 import { javascript } from "@codemirror/lang-javascript";
-import { EditorState } from "@codemirror/state";
-import { basicSetup } from "@codemirror/basic-setup";  // ✅ correct import
-import { dracula } from "@uiw/codemirror-theme-dracula";
+import ACTIONS from "../../Action";
 
-export default function Editor({ value, onChange }) {
-  const editorRef = useRef(null);
+const Editor = ({ socketRef, roomId, onCodeChange, value = "" }) => {
+  const handleChange = (val) => {
+    onCodeChange(val);
+    if (socketRef.current) {
+      socketRef.current.emit(ACTIONS.CODE_CHANGE, { roomId, code: val });
+    }
+  };
 
   useEffect(() => {
-    if (editorRef.current) return;
+    if (socketRef.current) {
+      socketRef.current.on(ACTIONS.CODE_CHANGE, ({ code }) => {
+        if (code !== null) {
+          onCodeChange(code);
+        }
+      });
+    }
 
-    const startState = EditorState.create({
-      doc: value || "",
-      extensions: [
-        basicSetup,
-        javascript(),
-        dracula,
-        EditorView.updateListener.of((update) => {
-          if (update.docChanged) {
-            onChange(update.state.doc.toString());
-          }
-        }),
-      ],
-    });
+    return () => {
+      socketRef.current?.off(ACTIONS.CODE_CHANGE);
+    };
+  }, [socketRef]);
 
-    const view = new EditorView({
-      state: startState,
-      parent: document.getElementById("editor"),
-    });
+  return (
+    <CodeMirror
+      value={value}
+      height="100vh"
+      theme="dark"
+      extensions={[javascript()]}
+      onChange={(val) => handleChange(val)}
+    />
+  );
+};
 
-    editorRef.current = view;
-  }, []);
-
-  return <div id="editor" className="h-screen w-full" />; // ✅ fixed typo: h-scrern → h-screen
-}
+export default Editor;
