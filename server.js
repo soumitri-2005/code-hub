@@ -13,12 +13,11 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-app.use(express.static(path.join(__dirname, "dist")));
+app.use(express.static(path.join(__dirname, "dist"))); 
 
-app.get("*", (req, res) => {
+app.use((req, res, next) => {
   res.sendFile(path.join(__dirname, "dist", "index.html"));
-});
-
+})
 
 const userSocketMap = {};
 
