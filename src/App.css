@@ -206,26 +206,33 @@ footer p a:hover {
 
 .aside-down .btn {
   width: 85%;
-  font-weight: 700;
   font-family: var(--font-style);
 }
 
 .aside-down .copy-btn {
-  background-color: rgb(36, 224, 36);
-  font-size: 13px;
+  background-color: #282C34;
+  border: 1px solid rgb(36, 224, 36);
+  color: rgb(36, 224, 36);
+  font-size: 14px;
+  font-weight: 400;
+  border-radius: 14px;
 }
 
 .aside-down .copy-btn:hover {
-  background-color: rgba(36, 224, 36, 0.658);
+  background-color: rgba(36, 224, 36, 0.134);
 }
 
 .aside-down .leave-btn {
-  background-color: rgb(255, 0, 0);
-  font-size: 13px;
+  background-color: #282C34;
+  border: 1px solid rgb(226, 36, 36);
+  color: rgb(226, 36, 36);
+  font-size: 14px;
+  font-weight: 400;
+    border-radius: 14px;
 }
 
 .aside-down .leave-btn:hover {
-  background-color: rgba(255, 0, 0, 0.682);
+  background-color: rgba(255, 0, 0, 0.095);
 }
 
 .client-list {
@@ -253,4 +260,44 @@ footer p a:hover {
   display: flex;
   flex-direction: column;
   font-size: 15px;
+  flex: 1;
+}
+
+.mobile-menu {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .main-wrapper {
+    position: relative;
+  }
+
+  .mobile-menu {
+    display: block;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    font-size: 14px;
+    padding: 8px;
+    background: var(--dark-one);
+    color: white;
+    border: none;
+    border-radius: 5px;
+  }
+
+  .aside {
+    position: fixed;
+    left: -260px;
+    top: 0;
+    width: 250px;
+    height: 100vh;
+    background: #1e1e1e;
+    transition: left 0.3s ease;
+    z-index: 999;
+  }
+
+  .aside.open {
+    left: 0;
+  }
 }

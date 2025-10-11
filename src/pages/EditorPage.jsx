@@ -20,6 +20,7 @@ const EditorPage = () => {
 
   const [clients, setClients] = useState([]);
   const [code, setCode] = useState(""); // editor content
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
     if (!location.state) return;
@@ -77,7 +78,13 @@ const EditorPage = () => {
 
   return (
     <div className="main-wrapper">
-      <div className="aside">
+      <button
+        className="mobile-menu"
+        onClick={() => setIsSidebarOpen((prev) => !prev)}
+      >
+        ☰
+      </button>
+      <div className={`aside ${isSidebarOpen ? "open" : ""}`}>
         <div className="aside-up">
           <div className="logo logo-wrapper" onClick={() => navigate("/")}>
             <img src={logo} alt="logo" />
@@ -111,7 +118,8 @@ const EditorPage = () => {
           </button>
         </div>
       </div>
-      <div className="editor-wrapper">
+
+      <div className="editor-wrapper" onClick={() => setIsSidebarOpen(false)}>
         <Editor
           socketRef={socketRef}
           roomId={roomId}
